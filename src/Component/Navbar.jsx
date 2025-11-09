@@ -1,7 +1,10 @@
-import React from "react";
+import React, { use } from "react";
 import { Link, NavLink } from "react-router";
+import { AuthContext } from "../Context/AuthContext";
+import { div } from "motion/react-client";
 
 const Navbar = () => {
+     let {user} = use(AuthContext)
   return (
     <div
       className=" bg-emerald-600
@@ -73,9 +76,21 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        <div className="navbar-end">
-          <a className="btn">Button</a>
-        </div>
+        <div className="navbar-end flex gap-2">
+            {
+                user? 
+                <Link to='/logout'><li className="btn">Log Out</li></Link> 
+                :
+                <div>
+                    <Link to='/register'><li className="btn">Register</li></Link>
+                     <Link to='/login'>Log In</Link>
+                </div>
+
+
+            }
+         
+
+        </div> 
       </div>
     </div>
   );
