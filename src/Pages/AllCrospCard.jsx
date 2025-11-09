@@ -1,31 +1,11 @@
-import React from "react";
-import { useLoaderData } from "react-router";
-import Banner from "./Banner";
+import React from 'react';
 
-const Home = () => {
-  let data = useLoaderData();
-  console.log(data);
-  
-  return (
-    <>
-    <Banner></Banner>
- <div className="mt-20">
+const AllCrospCard = ({prev}) => {
+     
+     
     
-     <div>
-          <h2 className="text-2xl text-left md:text-3xl font-bold text-[#4cb887] mb-2">
-    Available Fresh Crops
-  </h2>
-
-  {/* Paragraph */}
-  
-     </div>
-    <div className="grid grid-cols-1 md:grid-cols-2 py-10 lg:grid-cols-3 gap-5">
-    
-
-
-      {
-        data.slice(0,6).map(prev =>
-             <article
+    return (
+                     <article
   className="group  relative w-full  overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
   aria-labelledby={`crop-${prev?._id}`}
 >
@@ -106,12 +86,9 @@ const Home = () => {
 
   {/* Decorative glow on hover */}
   <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-transparent transition group-hover:ring-emerald-200" />
-</article>)
-      }
-    </div>
-    </div>
-    </>
-  );
+</article>
+
+    );
 };
 
-export default Home;
+export default AllCrospCard;

@@ -2,18 +2,27 @@ import React from 'react';
 import Navbar from '../Component/Navbar';
 import { Outlet } from 'react-router';
 import Footer from '../Component/Footer';
+import Banner from '../Pages/Banner';
 
 const MainLayout = () => {
     return (
         <div className='flex flex-col min-h-screen'>
             <header>
-                <Navbar></Navbar>
+               <div className=''>
+                 <Navbar></Navbar>
+               </div>
+                
             </header>
-            <main className=' container mx-auto flex-1'>
+            
+            <main className=' bg-[#e1fade] '>
+               <div className='container mx-auto flex-1'> 
                 <Outlet></Outlet>
+                </div>
             </main>
             <footer>
-                <Footer></Footer>
+              
+                    <Footer></Footer>
+            
             </footer>
            
         </div>
