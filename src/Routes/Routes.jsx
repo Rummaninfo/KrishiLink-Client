@@ -4,6 +4,7 @@ import Home from "../Pages/Home";
 import AllCrops from "../Pages/AllCrops";
 import Login from "../Form/Login";
 import Register from "../Form/Register";
+import NotFound from "../Pages/NotFound";
 
 
 
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
        {
         path: "/register", 
         element: <Register></Register>
+       }, 
+       {
+        path: "*", 
+        element: <NotFound></NotFound>
        }
 
     ]

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useLoaderData } from "react-router";
+
 import AllCrospCard from "./AllCrospCard";
 import UseFarmer from "../Hook/UseFarmer";
 import { circIn } from "motion";
+import { p } from "motion/react-client";
 
 const AllCrops = () => {
   let { crops } = UseFarmer();
@@ -15,7 +16,9 @@ const AllCrops = () => {
   useEffect(()=>{
       setFilteredCrops(crops)
   }, [crops])
-
+  
+   
+ 
 
   console.log(search);
   let searchBar = (e) => {
@@ -25,9 +28,12 @@ const AllCrops = () => {
     let filterdata = crops.filter((item) =>
       item.name.toLowerCase().includes(term.toLowerCase())
     );
+   
     setFilteredCrops(filterdata)
     
   };
+ 
+ 
   return (
     <div className="mt-5">
       <h1 className="text-3xl text-center font-semibold text-emerald-700 ">
@@ -65,9 +71,13 @@ const AllCrops = () => {
       </div>
 
       <div className="grid grid-cols-1 pt-10 pb-10 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {filteredCrops.map((prev) => (
+        {
+            filteredCrops.length === 0 ? <p>Not founded</p>: 
+            filteredCrops.map((prev) => (
           <AllCrospCard prev={prev}></AllCrospCard>
-        ))}
+        ))
+
+        }
       </div>
     </div>
   );
