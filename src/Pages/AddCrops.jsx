@@ -39,7 +39,7 @@ const AddCrops = () => {
     axios.post("http://localhost:9000/allcrops", info)
     .then(()=>{
         alert("success fully data added")
-        navigate("/mypost")
+        navigate("/myposts")
     })
     .catch(error =>{
         alert("error", error)

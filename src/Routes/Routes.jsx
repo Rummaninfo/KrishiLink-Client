@@ -48,7 +48,8 @@ export const router = createBrowserRouter([
        },
        {
         path: "myposts", 
-        element: <MyPost></MyPost>
+        element: <MyPost></MyPost>,
+        // loader: ({params})=> fetch(`http://localhost:9000/allcrops/${params.id}`)
        },
        {
           path:"myinterests", 
