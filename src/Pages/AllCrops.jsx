@@ -3,20 +3,28 @@ import React, { useEffect, useState } from "react";
 import AllCrospCard from "./AllCrospCard";
 import UseFarmer from "../Hook/UseFarmer";
 import { circIn } from "motion";
-import { p } from "motion/react-client";
+import { Atom } from "react-loading-indicators";
+import { div } from "motion/react-client";
+
 
 const AllCrops = () => {
-  let { crops } = UseFarmer();
+  let { crops, loading } = UseFarmer();
 
   
   let [search, setSearch] = useState("");
   let [filteredCrops, setFilteredCrops] = useState(crops);
 
-
+  
   useEffect(()=>{
       setFilteredCrops(crops)
   }, [crops])
-  
+  if(loading){
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Atom color="#32cd32" size="medium" text="" textColor="" />
+      </div>
+    )
+  }
    
  
 

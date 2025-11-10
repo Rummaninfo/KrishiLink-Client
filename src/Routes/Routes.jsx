@@ -5,6 +5,12 @@ import AllCrops from "../Pages/AllCrops";
 import Login from "../Form/Login";
 import Register from "../Form/Register";
 import NotFound from "../Pages/NotFound";
+import CropsDetails from "../Pages/CropsDetails";
+import Privatepage from "../PrivateRoute/Privatepage";
+import MyProfile from "../Pages/MyProfile";
+import AddCrops from "../Pages/AddCrops";
+import MyPost from "../Pages/MyPost";
+import MyInterest from "../Pages/MyInterest";
 
 
 
@@ -33,9 +39,33 @@ export const router = createBrowserRouter([
         element: <Register></Register>
        }, 
        {
+        path: "/myprofile",
+        element: <MyProfile></MyProfile>
+       },
+       {
+        path: "/addcrops", 
+        element: <AddCrops></AddCrops>
+       },
+       {
+        path: "/mypost", 
+        element: <MyPost></MyPost>
+       },
+       {
+          path:"myinterest", 
+          element: <MyInterest></MyInterest>
+       },
+       {
+        path:"/crops-details/:id", 
+        element: <Privatepage>
+          <CropsDetails></CropsDetails>
+        </Privatepage>, 
+        loader: ({params})=> fetch(`http://localhost:9000/allcrops/${params.id}`)
+       },
+       {
         path: "*", 
         element: <NotFound></NotFound>
-       }
+       },
+       
 
     ]
   },

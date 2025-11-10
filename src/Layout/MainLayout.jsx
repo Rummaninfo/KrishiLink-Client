@@ -14,8 +14,8 @@ const MainLayout = () => {
                 
             </header>
             
-            <main className=' bg-[#e1fade] '>
-               <div className='container mx-auto flex-1'> 
+            <main className=' bg-[#e1fade] flex-1 '>
+               <div className='container mx-auto '> 
                 <Outlet></Outlet>
                 </div>
             </main>
