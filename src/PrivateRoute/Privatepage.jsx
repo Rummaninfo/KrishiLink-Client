@@ -8,7 +8,12 @@ const Privatepage = ({children}) => {
     
 
     if(loading){
-        return <Atom color="#32cd32" size="medium" text="" textColor="" />
+        return (
+             <div className="flex justify-center items-center min-h-screen">
+                    <Atom color="#32cd32" size="medium" text="" textColor="" />
+                  </div>
+        )
+        
     }
     if(!user){
         return <Navigate to='/register'></Navigate>
