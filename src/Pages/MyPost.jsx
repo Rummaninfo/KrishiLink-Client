@@ -3,19 +3,18 @@ import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
 import { Atom } from "react-loading-indicators";
 
-
 const MyPost = () => {
   const { user } = useContext(AuthContext);
   const [rows, setRows] = useState([]);
-  let {loading} = use(AuthContext)
-    const [selected, setSelected] = useState(null);
-   console.log(selected)
-  
-  console.log(rows)
+  let { loading } = use(AuthContext);
+  const [selected, setSelected] = useState(null);
+  console.log(selected);
+
+  console.log(rows);
 
   console.log(rows);
   let cropRef = useRef();
-  
+
   useEffect(() => {
     if (!user?.email) return;
 
@@ -26,16 +25,16 @@ const MyPost = () => {
       .then((res) => setRows(res.data))
       .catch((err) => console.log(err));
   }, [user?.email]);
- if(loading){
+  if (loading) {
     return (
-         <div className="flex justify-center items-center min-h-screen">
-                    <Atom color="#32cd32" size="medium" text="" textColor="" />
-                  </div>
-    )
+      <div className="flex justify-center items-center min-h-screen">
+        <Atom color="#32cd32" size="medium" text="" textColor="" />
+      </div>
+    );
   }
   let editbtn = (item) => {
-    console.log(item)
-    setSelected(item)
+    console.log(item);
+    setSelected(item);
     cropRef.current.showModal();
   };
 
@@ -44,22 +43,30 @@ const MyPost = () => {
     let name = e.target.name.value;
     let pricePerUnit = e.target.pricePerUnit.value;
     let quantity = e.target.quantity.value;
-    let updateinfo={
-        name, pricePerUnit, quantity
-    }
-    axios.put(`http://localhost:9000/myposts/${selected._id}`, updateinfo)
-    .then((r)=>{
-        console.log(r)
+    let updateinfo = {
+      name,
+      pricePerUnit,
+      quantity,
+    };
+    axios
+      .put(`http://localhost:9000/myposts/${selected._id}`, updateinfo)
+      .then((r) => {
+        console.log(r);
 
-     axios
-      .get("http://localhost:9000/myposts", {
-        params: { email: user.email },
-      })
-      .then((res) => setRows(res.data))
+        axios
+          .get("http://localhost:9000/myposts", {
+            params: { email: user.email },
+          })
+          .then((res) => setRows(res.data));
+      });
+  };
 
+  let postdeleted = (item) => {
+    axios.delete(`http://localhost:9000/myposts/${item._id}`).then(() => {
+          setRows(prev => prev.filter(r => r._id !== item._id));
 
-
-    })
+      
+    });
   };
 
   return (
@@ -108,7 +115,10 @@ const MyPost = () => {
                 {/* ACTIONS */}
                 <td className="py-3">
                   <div className="flex justify-end gap-2">
-                    <button onClick={()=> editbtn(item)} className="btn btn-xs">
+                    <button
+                      onClick={() => editbtn(item)}
+                      className="btn btn-xs"
+                    >
                       Edit
                     </button>
 
@@ -126,7 +136,7 @@ const MyPost = () => {
                               </span>
                             </label>
                             <input
-                            defaultValue={rows.name}
+                              defaultValue={rows.name}
                               type="text"
                               name="name"
                               placeholder="e.g., Tomato"
@@ -138,12 +148,12 @@ const MyPost = () => {
                           {/* Crop Price */}
                           <div className="form-control">
                             <label className="label">
-                              <span  className="label-text font-medium">
+                              <span className="label-text font-medium">
                                 Price (৳)
                               </span>
                             </label>
                             <input
-                             defaultValue={item.pricePerUnit}
+                              defaultValue={item.pricePerUnit}
                               type="number"
                               name="pricePerUnit"
                               min="0"
@@ -190,7 +200,10 @@ const MyPost = () => {
                       </div>
                     </dialog>
 
-                    <button className="btn btn-xs btn-error text-white">
+                    <button
+                      onClick={() => postdeleted(item)}
+                      className="btn btn-xs btn-error text-white"
+                    >
                       Delete
                     </button>
                   </div>
