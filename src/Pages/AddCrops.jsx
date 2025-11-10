@@ -2,9 +2,11 @@ import { img } from "motion/react-client";
 import React, { use } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 const AddCrops = () => {
   let { user } = use(AuthContext);
+  let navigate = useNavigate()
   console.log(user);
   let addCrop = (e) => {
     e.preventDefault();
@@ -35,8 +37,13 @@ const AddCrops = () => {
     };
     console.log(info);
     axios.post("http://localhost:9000/allcrops", info)
+    .then(()=>{
+        alert("success fully data added")
+        navigate("/mypost")
+    })
     .catch(error =>{
         alert("error", error)
+         
     })
     
   };

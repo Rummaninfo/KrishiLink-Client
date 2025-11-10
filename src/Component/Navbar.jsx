@@ -9,7 +9,7 @@ const Navbar = () => {
   const handleSignOut = async () => {
     try {
       await userSignOut();
-      navigate("/login"); // or "/" if you prefer
+      navigate("/login"); 
     } catch (err) {
       console.error(err);
     }
@@ -78,12 +78,12 @@ const Navbar = () => {
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink to="/myposts" className={({ isActive }) => (isActive ? active : undefined)}>
+                    <NavLink to="/mypost" className={({ isActive }) => (isActive ? active : undefined)}>
                       My Posts
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink to="/my-interests" className={({ isActive }) => (isActive ? active : undefined)}>
+                    <NavLink to="/myinterest" className={({ isActive }) => (isActive ? active : undefined)}>
                       My Interests
                     </NavLink>
                   </li>
@@ -133,7 +133,7 @@ const Navbar = () => {
                   </NavLink>
                 </li>
                 <li className="font-medium">
-                  <NavLink to="/my-interests" className={({ isActive }) => (isActive ? active : undefined)}>
+                  <NavLink to="/myinterests" className={({ isActive }) => (isActive ? active : undefined)}>
                     My Interests
                   </NavLink>
                 </li>

@@ -47,11 +47,11 @@ export const router = createBrowserRouter([
         element: <AddCrops></AddCrops>
        },
        {
-        path: "/mypost", 
+        path: "myposts", 
         element: <MyPost></MyPost>
        },
        {
-          path:"myinterest", 
+          path:"myinterests", 
           element: <MyInterest></MyInterest>
        },
        {
@@ -61,10 +61,10 @@ export const router = createBrowserRouter([
         </Privatepage>, 
         loader: ({params})=> fetch(`http://localhost:9000/allcrops/${params.id}`)
        },
-       {
-        path: "*", 
-        element: <NotFound></NotFound>
-       },
+      //  {
+      //   path: "*", 
+      //   element: <NotFound></NotFound>
+      //  },
        
 
     ]
