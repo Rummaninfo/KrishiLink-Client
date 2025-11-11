@@ -19,8 +19,8 @@ const Navbar = () => {
     "border-l-2 border-r-2 px-1 bg-amber-400 border-green-700 hover:text-red-900";
 
   return (
-    <div className="bg-emerald-600 shadow-sm">
-      <div className="container mx-auto navbar">
+    <div className="bg-emerald-600   shadow-sm">
+      <div className="container mx-auto  navbar">
         <div className="navbar-start">
           {/* Mobile menu button */}
           <div className="dropdown">
@@ -150,7 +150,11 @@ const Navbar = () => {
               <Link to="/login" className="btn btn-ghost">Login</Link>
             </div>
           ) : (
+            
+           
             <button onClick={handleSignOut} className="btn">Log Out</button>
+  
+   
           )}
         </div>
       </div>
