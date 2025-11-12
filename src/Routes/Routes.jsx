@@ -59,6 +59,8 @@ export const router = createBrowserRouter([
         path:"/crops-details/:id", 
         element: <Privatepage>
           <CropsDetails></CropsDetails>
+
+          
         </Privatepage>, 
         loader: ({params})=> fetch(`http://localhost:9000/allcrops/${params.id}`)
        },

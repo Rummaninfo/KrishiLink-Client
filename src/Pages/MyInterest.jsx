@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
+import { Atom } from "react-loading-indicators";
 
 const MyInterest = () => {
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
   const [mydata, setMydata] = useState([]);
 
   useEffect(() => {
@@ -14,6 +15,13 @@ const MyInterest = () => {
         .catch(console.error);
     }
   }, [user]);
+  if(loading){
+     return(
+        <div className="flex justify-center items-center min-h-screen">
+                    <Atom color="#32cd32" size="medium" text="" textColor="" />
+                  </div>
+     )
+  }
 
   return (
     <div className="mx-auto p-6">
