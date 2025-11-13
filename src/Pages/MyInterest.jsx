@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
 import { Atom } from "react-loading-indicators";
+import { Link } from "react-router";
 
 const API_BASE = "http://localhost:9000";
 
@@ -10,6 +11,9 @@ const MyInterest = () => {
   const [mydata, setMydata] = useState([]);
   const [cropsMap, setCropsMap] = useState({});
   const [loadingData, setLoadingData] = useState(false);
+
+  // NEW: filter state (status)
+  const [filterStatus, setFilterStatus] = useState("all"); // all | pending | accepted | rejected
 
   useEffect(() => {
     if (!user?.email) return;
@@ -69,13 +73,39 @@ const MyInterest = () => {
     );
   }
 
+  // derive displayed data based on filterStatus
+  const displayed = mydata.filter((item) => {
+    if (!filterStatus || filterStatus === "all") return true;
+    // normalize undefined -> pending
+    const st = (item.status || "pending").toString().toLowerCase();
+    return st === filterStatus.toLowerCase();
+  });
+
   return (
     <div className="mx-auto p-6">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 gap-4">
         <h1 className="text-2xl font-bold text-slate-900">
           My Interests <span className="text-emerald-600">({mydata.length})</span>
         </h1>
-        {loadingData && <div className="text-sm text-slate-500">Refreshing…</div>}
+
+        <div className="flex items-center gap-3">
+          {loadingData && <div className="text-sm text-slate-500">Refreshing…</div>}
+
+          {/* Sorting / Filter by status */}
+          <label className="flex items-center gap-2 text-sm">
+            <span className="text-slate-600">Filter:</span>
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="select select-sm border rounded px-2 py-1 bg-white"
+            >
+              <option value="all">All</option>
+              <option value="pending">Pending</option>
+              <option value="accepted">Accepted</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </label>
+        </div>
       </div>
 
       <div className="rounded-2xl border shadow-sm bg-white overflow-hidden">
@@ -84,7 +114,7 @@ const MyInterest = () => {
           <h2 className="text-lg font-semibold text-slate-900">Interest List</h2>
         </div>
 
-        {mydata.length === 0 ? (
+        {displayed.length === 0 ? (
           <div className="text-center py-20 text-slate-500">No interests found</div>
         ) : (
           <div className="overflow-x-auto">
@@ -100,11 +130,21 @@ const MyInterest = () => {
               </thead>
 
               <tbody className="[&>tr:nth-child(odd)]:bg-white [&>tr:nth-child(even)]:bg-slate-50/50">
-                {mydata.map((item) => (
+                {displayed.map((item) => (
                   <tr key={item._id} className="hover:bg-emerald-50/40 transition-colors">
                     <td className="py-3 px-4">
-                      <div className="font-medium text-slate-900">{item.cropName || item.cropId || "—"}</div>
-                      <div className="text-xs text-slate-500">{item.createdAt ? new Date(item.createdAt).toLocaleString() : ""}</div>
+                      {/* NEW: clickable crop name → details page */}
+                      <div className="font-medium text-slate-900">
+                        <Link
+                          to={`/crops/${item.cropId}`}
+                          className="hover:underline text-emerald-600"
+                        >
+                          {item.cropName || item.cropId || "—"}
+                        </Link>
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        {item.createdAt ? new Date(item.createdAt).toLocaleString() : ""}
+                      </div>
                     </td>
 
                     <td className="py-3 px-4">

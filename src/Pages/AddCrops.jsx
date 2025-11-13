@@ -3,6 +3,7 @@ import React, { use } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2"; // <-- added
 
 const AddCrops = () => {
   let { user } = use(AuthContext);
@@ -37,13 +38,31 @@ const AddCrops = () => {
     };
     console.log(info);
     axios.post("http://localhost:9000/allcrops", info)
-    .then(()=>{
-        alert("success fully data added")
-        navigate("/myposts")
+    .then(() => {
+        // Success toast (auto-close) then navigate to /myposts
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: 'Crop added successfully',
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true
+        }).then(() => {
+          navigate("/myposts")
+        })
     })
     .catch(error =>{
-        alert("error", error)
-         
+        // Error alert with message
+        const message =
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to add crop. Please try again.";
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: message,
+        });
     })
     
   };

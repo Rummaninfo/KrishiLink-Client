@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useLoaderData, useNavigate, useParams } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
+import Swal from "sweetalert2";
 
 // const API_BASE = "http://localhost:9000";
 const API_BASE = "http://localhost:9000";
@@ -138,9 +139,22 @@ const CropsDetails = () => {
       setMessage("");
 
       if (postRes.data?.message) {
-        alert(postRes.data.message);
+        // Sweet success
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: postRes.data.message,
+          timer: 1500,
+          showConfirmButton: false,
+        });
       } else {
-        alert("Interest submitted successfully.");
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Interest submitted successfully.",
+          timer: 1500,
+          showConfirmButton: false,
+        });
       }
     } catch (err) {
       console.error("Failed to submit interest:", err);
@@ -149,32 +163,56 @@ const CropsDetails = () => {
         err.response?.data?.message?.toLowerCase().includes("exist")
       ) {
         setAlreadyInterested(true);
-        alert("You have already shown interest in this crop.");
+        Swal.fire({
+          icon: "info",
+          title: "Already Sent",
+          text: "You have already shown interest in this crop.",
+        });
       } else if (err.response?.data?.message) {
         setPostError(err.response.data.message);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: err.response.data.message,
+        });
       } else {
         setPostError("Failed to submit interest. Please try again.");
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to submit interest. Please try again.",
+        });
       }
     } finally {
       setPosting(false);
     }
   };
 
-
-
-  // ✅ FIXED: Owner actions: accept/reject using PUT method only
+  // ✅ Owner actions: accept/reject — uses SweetAlert2 for confirm + feedback
   const handleUpdateRequestStatus = async (requestId, newStatus) => {
     if (!requestId) return;
-    const ok = window.confirm(
-      `Are you sure you want to mark this request as "${newStatus}"?`
-    );
-    if (!ok) return;
+
+    // SweetAlert2 confirm instead of window.confirm
+    const confirmRes = await Swal.fire({
+      title: `Mark request as "${newStatus}"?`,
+      text:
+        newStatus === "accepted"
+          ? "This will decrement the crop quantity."
+          : "This will mark the request as rejected.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    });
+
+    if (!confirmRes.isConfirmed) return;
 
     setUpdatingRequestId(requestId);
     const prevRequests = [...requests];
 
     try {
-      //  USE PUT METHOD INSTEAD OF PATCH
+      // USE PUT METHOD
       const res = await axios.put(`${API_BASE}/myinterest`, {
         interestId: requestId,
         cropsId: crop._id,
@@ -197,46 +235,67 @@ const CropsDetails = () => {
         )
       );
 
-
-      
-
       // Update local quantity
       if (updatedCrop && String(updatedCrop._id) === String(crop._id)) {
         setLocalQuantity(updatedCrop.quantity);
       } else if (newStatus === "accepted") {
         // fallback optimistic decrement
-        const req = requests.find((x) => String(x._id) === String(requestId));
+        const req = prevRequests.find((x) => String(x._id) === String(requestId));
         if (req) {
           const q = Number(req.quantity) || 0;
           setLocalQuantity((prev) => Math.max(0, prev - q));
         }
       }
 
-      // Show success message
-      if (res.data?.message) {
-        alert(res.data.message);
-      } else {
-        alert(`Request ${newStatus} successfully!`);
-      }
+      // Show success message (SweetAlert)
+      const successMsg = res.data?.message || `Request ${newStatus} successfully!`;
+      await Swal.fire({
+        icon: "success",
+        title: newStatus === "accepted" ? "Accepted" : "Updated",
+        text: successMsg,
+        timer: 1400,
+        showConfirmButton: false,
+      });
     } catch (err) {
       console.error("Failed to update request status:", err);
 
-      // Better error handling
-      if (err.response?.status === 400) {
-        alert(
-          err.response.data?.message ||
-            "Bad request (maybe insufficient quantity)."
-        );
-      } else if (err.response?.status === 404) {
-        alert("Server endpoint not found. Please check server connection.");
-      } else if (err.response?.status === 409) {
-        alert("This interest was already processed by someone else.");
-      } else if (err.response?.data?.message) {
-        alert(err.response.data.message);
-      } else {
-        alert("Failed to update status. Try again.");
-      }
+      // rollback
       setRequests(prevRequests);
+
+      // Better error handling with SweetAlert
+      if (err.response?.status === 400) {
+        Swal.fire({
+          icon: "error",
+          title: "Bad request",
+          text:
+            err.response.data?.message ||
+            "Bad request (maybe insufficient quantity).",
+        });
+      } else if (err.response?.status === 404) {
+        Swal.fire({
+          icon: "error",
+          title: "Not found",
+          text: "Server endpoint not found. Please check server connection.",
+        });
+      } else if (err.response?.status === 409) {
+        Swal.fire({
+          icon: "warning",
+          title: "Already processed",
+          text: "This interest was already processed by someone else.",
+        });
+      } else if (err.response?.data?.message) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: err.response.data.message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to update status. Try again.",
+        });
+      }
     } finally {
       setUpdatingRequestId(null);
     }
@@ -295,9 +354,7 @@ const CropsDetails = () => {
                     <p className="text-slate-500 text-xs">Price</p>
                     <p className="text-lg font-semibold text-emerald-600">
                       ৳{crop.pricePerUnit}{" "}
-                      <span className="text-sm text-slate-500">
-                        /{crop.unit}
-                      </span>
+                      <span className="text-sm text-slate-500">/{crop.unit}</span>
                     </p>
                   </div>
 
@@ -317,10 +374,7 @@ const CropsDetails = () => {
                     <p className="text-slate-500 text-xs">Seller</p>
                     <p className="text-base font-medium">
                       {crop.owner?.ownerName}
-                      <span className="text-slate-500">
-                        {" "}
-                        ({crop.owner?.ownerEmail})
-                      </span>
+                      <span className="text-slate-500"> ({crop.owner?.ownerEmail})</span>
                     </p>
                   </div>
                 </div>
@@ -333,9 +387,7 @@ const CropsDetails = () => {
                 <div className="rounded-2xl border shadow-sm p-5 bg-white">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h2 className="text-lg font-semibold">
-                        Received Interests
-                      </h2>
+                      <h2 className="text-lg font-semibold">Received Interests</h2>
                       <p className="text-xs text-slate-500">
                         All interest requests for this crop.
                       </p>
@@ -405,10 +457,7 @@ const CropsDetails = () => {
                                       <button
                                         className="btn btn-success btn-sm text-xs"
                                         onClick={() =>
-                                          handleUpdateRequestStatus(
-                                            r._id,
-                                            "accepted"
-                                          )
+                                          handleUpdateRequestStatus(r._id, "accepted")
                                         }
                                         disabled={updatingRequestId === r._id}
                                       >
@@ -420,10 +469,7 @@ const CropsDetails = () => {
                                       <button
                                         className="btn btn-error btn-sm text-xs"
                                         onClick={() =>
-                                          handleUpdateRequestStatus(
-                                            r._id,
-                                            "rejected"
-                                          )
+                                          handleUpdateRequestStatus(r._id, "rejected")
                                         }
                                         disabled={updatingRequestId === r._id}
                                       >
@@ -481,9 +527,7 @@ const CropsDetails = () => {
                     </div>
                   ) : localQuantity === 0 ? (
                     <div className="p-5 text-center border rounded-xl bg-red-50">
-                      <p className="text-red-700 font-semibold mb-2">
-                        Out of Stock
-                      </p>
+                      <p className="text-red-700 font-semibold mb-2">Out of Stock</p>
                       <p className="text-xs text-red-500">
                         This crop is currently not available.
                       </p>
@@ -522,9 +566,7 @@ const CropsDetails = () => {
 
                       <div className="form-control">
                         <label className="label">
-                          <span className="label-text font-medium">
-                            Message
-                          </span>
+                          <span className="label-text font-medium">Message</span>
                         </label>
                         <textarea
                           className="textarea textarea-bordered w-full min-h-24"
@@ -537,9 +579,7 @@ const CropsDetails = () => {
 
                       <div className="p-3 rounded-xl border bg-slate-50">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-600">
-                            Total Price
-                          </span>
+                          <span className="text-sm text-slate-600">Total Price</span>
                           <span className="text-lg font-semibold text-slate-900">
                             ৳{isNaN(total) ? 0 : total}
                           </span>

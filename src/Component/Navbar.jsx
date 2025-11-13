@@ -3,19 +3,8 @@ import { Link, NavLink, useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import { AuthContext } from "../Context/AuthContext";
 
-const linkVariants = {
-  rest: { scale: 1, y: 0 },
-  hover: {
-    scale: 1.03,
-    y: -3,
-    transition: { type: "spring", stiffness: 400, damping: 20 },
-  },
-};
-
-const tooltipVariants = {
-  hidden: { opacity: 0, y: 6 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.18 } },
-};
+const activeClasses =
+  "font-semibold text-emerald-700 bg-emerald-200 px-3 py-1 rounded-md shadow-sm";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -30,89 +19,45 @@ const Navbar = () => {
     }
   };
 
-  const activeClasses =
-    " font-medium text-green-600 px-2 bg-green-300 border-green-700 hover:text-green-500  rounded-sm";
+  const mainBtn =
+    "px-4 py-2 rounded-lg font-medium bg-white text-emerald-700 border border-emerald-600 hover:bg-emerald-600 hover:text-white transition";
 
   return (
-    <div className="bg-emerald-600 shadow-sm">
-      <div className="container mx-auto navbar px-3">
-        <div className="navbar-start flex items-center gap-2">
-          {/* Mobile menu button */}
-          <div className="dropdown">
-            <label
-              tabIndex={0}
-              className="btn btn-ghost lg:hidden"
-              aria-label="Open menu"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
-                />
-              </svg>
+    <div className="backdrop-blur-xl bg-emerald-600/90 sticky top-0 z-50 shadow-md">
+      <div className="container mx-auto navbar px-4">
+        {/* LEFT */}
+        <div className="navbar-start flex items-center gap-3">
+          {/* Mobile menu */}
+          <div className="dropdown lg:hidden">
+            <label tabIndex={0} className="btn btn-ghost text-white">
+              ☰
             </label>
 
-            {/* Mobile dropdown menu */}
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box !z-[999] mt-3 w-56 p-2 shadow"
+              className="menu menu-sm dropdown-content mt-3 p-3 shadow bg-white rounded-xl w-52"
             >
               <li>
-                <NavLink
-                  to="/"
-                  className={({ isActive }) => (isActive ? activeClasses : "")}
-                >
+                <NavLink to="/" className={({ isActive }) => isActive && activeClasses}>
                   Home
                 </NavLink>
               </li>
+
               <li>
                 <NavLink
                   to="/all-crops"
-                  className={({ isActive }) => (isActive ? activeClasses : "")}
+                  className={({ isActive }) => isActive && activeClasses}
                 >
                   All Crops
                 </NavLink>
               </li>
 
-              {!user ? (
-                <>
-                  <li>
-                    <NavLink
-                      to="/login"
-                      className={({ isActive }) =>
-                        isActive ? activeClasses : ""
-                      }
-                    >
-                      Login
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to="/register"
-                      className={({ isActive }) =>
-                        isActive ? activeClasses : ""
-                      }
-                    >
-                      Register
-                    </NavLink>
-                  </li>
-                </>
-              ) : (
+              {user ? (
                 <>
                   <li>
                     <NavLink
                       to="/myprofile"
-                      className={({ isActive }) =>
-                        isActive ? activeClasses : ""
-                      }
+                      className={({ isActive }) => isActive && activeClasses}
                     >
                       Profile
                     </NavLink>
@@ -120,9 +65,7 @@ const Navbar = () => {
                   <li>
                     <NavLink
                       to="/addcrops"
-                      className={({ isActive }) =>
-                        isActive ? activeClasses : ""
-                      }
+                      className={({ isActive }) => isActive && activeClasses}
                     >
                       Add Crops
                     </NavLink>
@@ -130,9 +73,7 @@ const Navbar = () => {
                   <li>
                     <NavLink
                       to="/myposts"
-                      className={({ isActive }) =>
-                        isActive ? activeClasses : ""
-                      }
+                      className={({ isActive }) => isActive && activeClasses}
                     >
                       My Posts
                     </NavLink>
@@ -140,134 +81,129 @@ const Navbar = () => {
                   <li>
                     <NavLink
                       to="/myinterests"
-                      className={({ isActive }) =>
-                        isActive ? activeClasses : ""
-                      }
+                      className={({ isActive }) => isActive && activeClasses}
                     >
                       My Interests
                     </NavLink>
                   </li>
+
                   <li>
-                    <button onClick={handleSignOut} className="btn btn-sm mt-1">
+                    <button onClick={handleSignOut} className={mainBtn}>
                       Log Out
                     </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link to="/login" className={mainBtn}>
+                      Login
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/register" className={mainBtn}>
+                      Register
+                    </Link>
                   </li>
                 </>
               )}
             </ul>
           </div>
 
-          <Link
-            to="/"
-            className="btn btn-ghost text-xl font-semibold tracking-wide"
-          >
+          {/* Logo */}
+          <Link className="text-2xl flex justify-center items-center font-bold text-white tracking-wide" to="/">
+         <img className="h-12" src="https://i.ibb.co.com/QFswnVw3/3-05-removebg-preview.png" alt="" />
             KrishiLink
+            
+
           </Link>
         </div>
 
-        {/* Desktop menu */}
-        <div className="navbar-center gap-2 hidden lg:flex">
-          <ul className="px-1 flex flex-row gap-4 items-center">
-            {[
-              { to: "/", label: "Home" },
-              { to: "/all-crops", label: "All Crops" },
-            ].map((item) => (
-              <li key={item.to} className="font-medium">
-                <NavLink
-                  to={item.to}
-                  className={({ isActive }) =>
-                    isActive ? activeClasses : undefined
-                  }
-                >
-                  <motion.span
-                    initial="rest"
-                    whileHover="hover"
-                    animate="rest"
-                    variants={linkVariants}
-                    className="px-2 py-1 rounded-md inline-block"
-                  >
-                    {item.label}
-                  </motion.span>
-                </NavLink>
-              </li>
-            ))}
+        {/* CENTER (Desktop links) */}
+        <div className="navbar-center hidden lg:flex">
+          <ul className="flex gap-6 text-white font-medium">
+            <li>
+              <NavLink to="/" className={({ isActive }) => isActive && activeClasses}>
+                Home
+              </NavLink>
+            </li>
 
-            {user ? (
+            <li>
+              <NavLink
+                to="/all-crops"
+                className={({ isActive }) => isActive && activeClasses}
+              >
+                All Crops
+              </NavLink>
+            </li>
+
+            {user && (
               <>
-                {[
-                  { to: "/myprofile", label: "Profile" },
-                  { to: "/addcrops", label: "Add Crops" },
-                  { to: "/myposts", label: "My Posts" },
-                  { to: "/myinterests", label: "My Interests" },
-                ].map((item) => (
-                  <li key={item.to} className="font-medium">
-                    <NavLink
-                      to={item.to}
-                      className={({ isActive }) =>
-                        isActive ? activeClasses : undefined
-                      }
-                    >
-                      <motion.span
-                        initial="rest"
-                        whileHover="hover"
-                        animate="rest"
-                        variants={linkVariants}
-                        className="px-2 py-1 rounded-md inline-block"
-                      >
-                        {item.label}
-                      </motion.span>
-                    </NavLink>
-                  </li>
-                ))}
+                <li>
+                  <NavLink
+                    to="/myprofile"
+                    className={({ isActive }) => isActive && activeClasses}
+                  >
+                    Profile
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/addcrops"
+                    className={({ isActive }) => isActive && activeClasses}
+                  >
+                    Add Crops
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/myposts"
+                    className={({ isActive }) => isActive && activeClasses}
+                  >
+                    My Posts
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/myinterests"
+                    className={({ isActive }) => isActive && activeClasses}
+                  >
+                    My Interests
+                  </NavLink>
+                </li>
               </>
-            ) : null}
+            )}
           </ul>
         </div>
 
-        {/* Right side auth actions */}
-        <div className="navbar-end flex items-center gap-3">
+        {/* RIGHT side */}
+        <div className="navbar-end flex items-center gap-4">
           {!user ? (
-            <div className="flex items-center gap-2">
-              <Link to="/register" className="btn">
+            <>
+              <Link to="/register" className={mainBtn}>
                 Register
               </Link>
-              <Link to="/login" className="btn btn-ghost">
+              <Link to="/login" className={mainBtn}>
                 Login
               </Link>
-            </div>
+            </>
           ) : (
-            <div className="flex items-center gap-3">
-              {/* User avatar with small tooltip on hover (framer-motion) */}
-              <div className="relative flex items-center">
-                <motion.img
-                  src={
-                    user?.photoURL ||
-                    `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                      user?.displayName || "U"
-                    )}&background=38b2ac&color=fff`
-                  }
-                  alt={user?.displayName || "User avatar"}
-                  className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm cursor-pointer"
-                  whileHover={{ scale: 1.07 }}
-                />
+            <>
+              <motion.img
+                src={
+                  user?.photoURL ||
+                  `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    user?.displayName || "User"
+                  )}&background=34d399&color=fff`
+                }
+                className="w-10 h-10 rounded-full border-2 border-white shadow cursor-pointer"
+                whileHover={{ scale: 1.1 }}
+              />
 
-                <motion.div
-                  initial="hidden"
-                  whileHover="visible"
-                  variants={tooltipVariants}
-                  className="absolute right-0 top-full mt-2 pointer-events-none"
-                  aria-hidden
-                >
-                  <div className="px-3 py-1 rounded-md bg-gray-800 text-white text-xs shadow">
-                    {user?.displayName || "No name"}
-                  </div>
-                </motion.div>
-              </div>
-
-              <button onClick={handleSignOut} className="btn">
+              <button onClick={handleSignOut} className={mainBtn}>
                 Log Out
               </button>
-            </div>
+            </>
           )}
         </div>
       </div>
