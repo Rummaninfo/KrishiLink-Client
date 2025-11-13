@@ -1,4 +1,4 @@
-// CropsDetails.jsx
+// src/pages/CropsDetails.jsx
 import axios from "axios";
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useLoaderData, useNavigate, useParams } from "react-router";
@@ -6,7 +6,6 @@ import { AuthContext } from "../Context/AuthContext";
 import Swal from "sweetalert2";
 
 const API_BASE = "https://krishilink-server-one.vercel.app";
-// const API_BASE = "https://krishilink-server-one.vercel.app";
 
 const CropsDetails = () => {
   const crop = useLoaderData();
@@ -370,13 +369,30 @@ const CropsDetails = () => {
                     <p className="text-base font-medium">{crop.location}</p>
                   </div>
 
+                  {/* ---------- Seller block (small UI tweaks here only) ---------- */}
                   <div className="border p-3 rounded-lg">
                     <p className="text-slate-500 text-xs">Seller</p>
-                    <p className="text-base font-medium">
-                      {crop.owner?.ownerName}
-                      <span className="text-slate-500"> ({crop.owner?.ownerEmail})</span>
-                    </p>
+
+                    {/* Use a container with controlled width and truncation/wrapping.
+                        - On small screens it will wrap naturally.
+                        - On larger screens it will truncate with ellipsis if too long. */}
+                    <div className="mt-1">
+                      <div className="text-base font-medium text-slate-900">
+                        {crop.owner?.ownerName || "Unknown Seller"}
+                      </div>
+
+                      {/* Email: allow wrapping on small screens, truncate on larger ones */}
+                      <div
+                        className="text-slate-500 text-sm mt-1
+                          break-words
+                          sm:max-w-[220px] sm:truncate sm:overflow-hidden"
+                        title={crop.owner?.ownerEmail || ""}
+                      >
+                        {crop.owner?.ownerEmail || "-"}
+                      </div>
+                    </div>
                   </div>
+                  {/* ---------------------------------------------------------------- */}
                 </div>
               </div>
             </div>

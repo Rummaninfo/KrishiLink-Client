@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import { toast, ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "../Context/AuthContext";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, Link } from "react-router";
 import Swal from "sweetalert2"; // <- SweetAlert2 import
 
 const Login = () => {
@@ -54,7 +54,7 @@ const Login = () => {
       });
 
       // keep toast too (optional) — comment out if you don't want both
-     
+      // toast.success("Successful login", { position: "top-center", autoClose: 2000, transition: Bounce });
     } catch (err) {
       console.error("Login error:", err);
       const message = err?.message || "Login failed";
@@ -103,6 +103,12 @@ const Login = () => {
               className="mt-1 w-full border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
               required
             />
+            {/* Forgot password link (UI only) */}
+            <div className="mt-2 text-right">
+              <Link to="/forgot-password" className="text-sm text-green-700 underline">
+                Forgot password?
+              </Link>
+            </div>
           </div>
 
           {error && (
