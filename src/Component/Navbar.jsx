@@ -67,7 +67,7 @@ const Navbar = () => {
             >
               <li>
                 <NavLink
-                  to="/home"
+                  to="/"
                   className={({ isActive }) => (isActive ? activeClasses : "")}
                 >
                   Home
@@ -169,7 +169,7 @@ const Navbar = () => {
         <div className="navbar-center gap-2 hidden lg:flex">
           <ul className="px-1 flex flex-row gap-4 items-center">
             {[
-              { to: "/home", label: "Home" },
+              { to: "/", label: "Home" },
               { to: "/all-crops", label: "All Crops" },
             ].map((item) => (
               <li key={item.to} className="font-medium">

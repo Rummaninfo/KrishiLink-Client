@@ -36,7 +36,7 @@ const AddCrops = () => {
       owner,
     };
     console.log(info);
-    axios.post("http://localhost:9000/allcrops", info)
+    axios.post("https://krishilink-server-one.vercel.app/allcrops", info)
     .then(()=>{
         alert("success fully data added")
         navigate("/myposts")

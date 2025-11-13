@@ -1,11 +1,12 @@
 import React, { use } from 'react';
 import { AuthContext } from '../Context/AuthContext';
-import { Navigate,  } from 'react-router';
+import { Navigate, useLocation,  } from 'react-router';
 import { Atom } from 'react-loading-indicators';
+
 
 const Privatepage = ({children}) => {
     let {user, loading} = use(AuthContext)
-    
+    let location = useLocation()
 
     if(loading){
         return (
@@ -16,7 +17,7 @@ const Privatepage = ({children}) => {
         
     }
     if(!user){
-        return <Navigate to='/register'></Navigate>
+        return <Navigate state={{from:location}} replace to='/register'></Navigate>
     }
     return children
 };

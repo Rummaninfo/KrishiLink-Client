@@ -1,30 +1,27 @@
-import React, { use, useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
 import { Atom } from "react-loading-indicators";
+import Swal from "sweetalert2";
+
+const API_BASE = "https://krishilink-server-one.vercel.app";
 
 const MyPost = () => {
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
   const [rows, setRows] = useState([]);
-  let { loading } = use(AuthContext);
   const [selected, setSelected] = useState(null);
-  console.log(selected);
+  const cropRef = useRef();
 
-  console.log(rows);
-
-  console.log(rows);
-  let cropRef = useRef();
-
+  // Load my posts
   useEffect(() => {
     if (!user?.email) return;
 
     axios
-      .get("http://localhost:9000/myposts", {
-        params: { email: user.email },
-      })
-      .then((res) => setRows(res.data))
+      .get(`${API_BASE}/myposts`, { params: { email: user.email } })
+      .then((res) => setRows(res.data || []))
       .catch((err) => console.log(err));
   }, [user?.email]);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -32,41 +29,79 @@ const MyPost = () => {
       </div>
     );
   }
-  let editbtn = (item) => {
-    console.log(item);
+
+  // Open Edit Modal
+  const editbtn = (item) => {
     setSelected(item);
-    cropRef.current.showModal();
+    if (cropRef.current && typeof cropRef.current.showModal === "function") {
+      cropRef.current.showModal();
+    }
   };
 
-  let updatedcrop = (e) => {
+  // Update Crop
+  const updatedcrop = (e) => {
     e.preventDefault();
-    let name = e.target.name.value;
-    let pricePerUnit = e.target.pricePerUnit.value;
-    let quantity = e.target.quantity.value;
-    let updateinfo = {
-      name,
-      pricePerUnit,
-      quantity,
-    };
-    axios
-      .put(`http://localhost:9000/myposts/${selected._id}`, updateinfo)
-      .then((r) => {
-        console.log(r);
+    if (!selected) return;
 
-        axios
-          .get("http://localhost:9000/myposts", {
-            params: { email: user.email },
-          })
-          .then((res) => setRows(res.data));
+    const updateinfo = {
+      name: e.target.name.value,
+      pricePerUnit: e.target.pricePerUnit.value,
+      quantity: e.target.quantity.value,
+    };
+
+    axios
+      .put(`${API_BASE}/myposts/${selected._id}`, updateinfo)
+      .then(() => {
+        setRows((prev) =>
+          prev.map((r) => (r._id === selected._id ? { ...r, ...updateinfo } : r))
+        );
+
+        Swal.fire({
+          icon: "success",
+          title: "Updated!",
+          text: "Your crop has been updated successfully.",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+
+        if (cropRef.current) cropRef.current.close();
+      })
+      .catch((err) => {
+        console.error("Update failed:", err);
+        Swal.fire("Error", "Failed to update crop.", "error");
       });
   };
 
-  let postdeleted = (item) => {
-    axios.delete(`http://localhost:9000/myposts/${item._id}`).then(() => {
-          setRows(prev => prev.filter(r => r._id !== item._id));
-
-      
+  // Delete Crop (SweetAlert2)
+  const postdeleted = async (item) => {
+    const { isConfirmed } = await Swal.fire({
+      title: `Delete "${item.name}"?`,
+      text: "This action cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#e3342f",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Yes, delete it",
     });
+
+    if (!isConfirmed) return;
+
+    try {
+      await axios.delete(`${API_BASE}/myposts/${item._id}`);
+
+      setRows((prev) => prev.filter((r) => r._id !== item._id));
+
+      Swal.fire({
+        icon: "success",
+        title: "Deleted!",
+        text: "Your post has been deleted.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      console.error("Delete failed:", err);
+      Swal.fire("Error", "Failed to delete post. Try again.", "error");
+    }
   };
 
   return (
@@ -74,13 +109,12 @@ const MyPost = () => {
       <h1 className="text-3xl font-bold text-green-700 mb-6">My Posts</h1>
 
       <div className="overflow-x-auto rounded-xl border bg-white shadow-sm">
-        {/* Responsive Table */}
         <table className="table min-w-[600px] w-full text-sm">
           <thead className="bg-slate-50 text-slate-600">
             <tr>
               <th className="py-3">Crop</th>
               <th className="py-3">Price</th>
-              <th className="py-3">quantity</th>
+              <th className="py-3">Quantity</th>
               <th className="py-3 text-right">Actions</th>
             </tr>
           </thead>
@@ -96,92 +130,70 @@ const MyPost = () => {
 
             {rows.map((item) => (
               <tr key={item._id} className="hover border-b">
-                {/* CROP */}
                 <td className="py-3 font-medium">{item.name}</td>
 
-                {/* PRICE */}
                 <td className="py-3">
                   ৳ {item.pricePerUnit}
                   <span className="text-slate-400"> / {item.unit}</span>
                 </td>
 
-                {/* QTY → GREEN BADGE */}
                 <td className="py-3">
                   <span className="inline-block bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full text-xs font-semibold">
                     {item.quantity}
                   </span>
                 </td>
 
-                {/* ACTIONS */}
                 <td className="py-3">
                   <div className="flex justify-end gap-2">
-                    <button
-                      onClick={() => editbtn(item)}
-                      className="btn btn-xs"
-                    >
+                    <button onClick={() => editbtn(item)} className="btn btn-xs">
                       Edit
                     </button>
 
-                    <dialog
-                      ref={cropRef}
-                      className="modal modal-bottom sm:modal-middle"
-                    >
+                    {/* Edit Modal */}
+                    <dialog ref={cropRef} className="modal modal-bottom sm:modal-middle">
                       <div className="modal-box">
                         <form onSubmit={updatedcrop} className="space-y-4">
-                          {/* Crop Name */}
                           <div className="form-control">
                             <label className="label">
-                              <span className="label-text font-medium">
-                                Crop Name
-                              </span>
+                              <span className="label-text font-medium">Crop Name</span>
                             </label>
                             <input
-                              defaultValue={rows.name}
+                              defaultValue={selected?.name}
                               type="text"
                               name="name"
-                              placeholder="e.g., Tomato"
                               className="input input-bordered w-full"
                               required
                             />
                           </div>
 
-                          {/* Crop Price */}
                           <div className="form-control">
                             <label className="label">
-                              <span className="label-text font-medium">
-                                Price (৳)
-                              </span>
+                              <span className="label-text font-medium">Price (৳)</span>
                             </label>
                             <input
-                              defaultValue={item.pricePerUnit}
+                              defaultValue={selected?.pricePerUnit}
                               type="number"
                               name="pricePerUnit"
                               min="0"
-                              step="0.01"
-                              placeholder="e.g., 55"
                               className="input input-bordered w-full"
                               required
                             />
                           </div>
 
-                          {/* Quantity */}
                           <div className="form-control">
                             <label className="label">
-                              <span className="label-text font-medium">
-                                Quantity
-                              </span>
+                              <span className="label-text font-medium">Quantity</span>
                             </label>
                             <input
+                              defaultValue={selected?.quantity}
                               type="number"
                               name="quantity"
                               min="0"
-                              placeholder="e.g., 350"
                               className="input input-bordered w-full"
                               required
                             />
                           </div>
 
-                          {/* Submit */}
                           <div className="pt-2 flex justify-end">
                             <button
                               type="submit"
@@ -193,7 +205,6 @@ const MyPost = () => {
                         </form>
                         <div className="modal-action">
                           <form method="dialog">
-                            {/* if there is a button in form, it will close the modal */}
                             <button className="btn">Close</button>
                           </form>
                         </div>

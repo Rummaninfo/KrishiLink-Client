@@ -1,6 +1,6 @@
 import React, { use, useEffect, useState } from "react";
 import Navbar from "../Component/Navbar";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import Footer from "../Component/Footer";
 import Banner from "../Pages/Banner";
 import { AuthContext } from "../Context/AuthContext";
@@ -8,6 +8,7 @@ import { Atom } from "react-loading-indicators";
 
 const MainLayout = () => {
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     setLoading(true);
@@ -15,7 +16,7 @@ const MainLayout = () => {
       setLoading(false);
     }, 500);
     return () => clearTimeout(timer);
-  }, []);
+  }, [location.pathname]);
 
   return (
     <div className="flex flex-col min-h-screen">

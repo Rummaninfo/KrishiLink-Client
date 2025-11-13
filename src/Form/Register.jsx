@@ -20,7 +20,7 @@ const Register = () => {
       setLoading(true);
       const result = await googleSignIn();
       console.log(result.user);
-      navigate("/home");
+      navigate("/");
     } catch (err) {
       console.error(err);
       toast.error(err?.message || "Google sign-in failed");
@@ -79,7 +79,7 @@ const Register = () => {
       });
 
       setError("");
-      navigate("/home");
+      navigate("/");
     } catch (err) {
       console.error(err);
       setError(err?.message || "Registration failed");

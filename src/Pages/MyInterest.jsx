@@ -3,37 +3,83 @@ import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
 import { Atom } from "react-loading-indicators";
 
+const API_BASE = "https://krishilink-server-one.vercel.app";
+
 const MyInterest = () => {
   const { user, loading } = useContext(AuthContext);
   const [mydata, setMydata] = useState([]);
+  const [cropsMap, setCropsMap] = useState({});
+  const [loadingData, setLoadingData] = useState(false);
 
   useEffect(() => {
-    if (user?.email) {
-      axios
-        .get(`http://localhost:9000/myinterest?email=${user.email}`)
-        .then((res) => setMydata(res.data || []))
-        .catch(console.error);
-    }
-  }, [user]);
-  if(loading){
-     return(
-        <div className="flex justify-center items-center min-h-screen">
-                    <Atom color="#32cd32" size="medium" text="" textColor="" />
-                  </div>
-     )
+    if (!user?.email) return;
+
+    let cancelled = false;
+    setLoadingData(true);
+
+    // Parallel fetch: interests + all crops
+    const p1 = axios.get(`${API_BASE}/myinterest`, { params: { email: user.email } });
+    const p2 = axios.get(`${API_BASE}/allcrops`);
+
+    Promise.all([p1, p2])
+      .then(([intRes, cropsRes]) => {
+        if (cancelled) return;
+
+        const interests = Array.isArray(intRes.data) ? intRes.data : [];
+        const crops = Array.isArray(cropsRes.data) ? cropsRes.data : [];
+
+        // build map: cropId -> crop doc
+        const map = {};
+        for (const c of crops) {
+          if (c && c._id) map[String(c._id)] = c;
+        }
+        setCropsMap(map);
+
+        // merge cropName/owner into interest items for display (non-destructive)
+        const merged = interests.map((it) => {
+          const crop = map[String(it.cropId)];
+          return {
+            ...it,
+            cropName: it.cropName || (crop ? crop.name : ""),
+            ownerName: it.ownerName || (crop ? crop.owner?.ownerName : "") || it.ownerEmail,
+            unit: it.unit || (crop ? crop.unit : ""),
+          };
+        });
+
+        setMydata(merged);
+      })
+      .catch((err) => {
+        console.error("Failed to load interests or crops:", err);
+        setMydata([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingData(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.email]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Atom color="#32cd32" size="medium" text="" textColor="" />
+      </div>
+    );
   }
 
   return (
     <div className="mx-auto p-6">
-      <h1 className="text-2xl font-bold text-slate-900 mb-6">
-        My Interests <span className="text-emerald-600">({mydata.length})</span>
-      </h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-slate-900">
+          My Interests <span className="text-emerald-600">({mydata.length})</span>
+        </h1>
+        {loadingData && <div className="text-sm text-slate-500">Refreshing…</div>}
+      </div>
 
-      {/* ===== UNIQUE TABLE DESIGN ===== */}
       <div className="rounded-2xl border shadow-sm bg-white overflow-hidden">
-        {/* top gradient strip */}
         <div className="h-1.5 w-full bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-500" />
-
         <div className="p-4 border-b">
           <h2 className="text-lg font-semibold text-slate-900">Interest List</h2>
         </div>
@@ -46,6 +92,7 @@ const MyInterest = () => {
               <thead className="sticky top-0 z-10">
                 <tr className="text-left text-[12px] uppercase tracking-wide text-slate-600 bg-slate-50">
                   <th className="py-3 px-4">Crop Name</th>
+                  <th className="py-3 px-4">Owner</th>
                   <th className="py-3 px-4">Quantity</th>
                   <th className="py-3 px-4">Message</th>
                   <th className="py-3 px-4">Status</th>
@@ -56,15 +103,12 @@ const MyInterest = () => {
                 {mydata.map((item) => (
                   <tr key={item._id} className="hover:bg-emerald-50/40 transition-colors">
                     <td className="py-3 px-4">
-                      <div className="flex items-center gap-3">
-                        
-                        <div>
-                          <div className="font-medium text-slate-900 leading-5">
-                            {item.userName || item.userName || "—"}
-                          </div>
-                          
-                        </div>
-                      </div>
+                      <div className="font-medium text-slate-900">{item.cropName || item.cropId || "—"}</div>
+                      <div className="text-xs text-slate-500">{item.createdAt ? new Date(item.createdAt).toLocaleString() : ""}</div>
+                    </td>
+
+                    <td className="py-3 px-4">
+                      <div className="text-sm font-medium text-slate-800">{item.ownerName || item.ownerEmail || "—"}</div>
                     </td>
 
                     <td className="py-3 px-4 whitespace-nowrap">
@@ -97,7 +141,7 @@ const MyInterest = () => {
                               : "bg-amber-600",
                           ].join(" ")}
                         />
-                        {item.status}
+                        {item.status || "pending"}
                       </span>
                     </td>
                   </tr>
