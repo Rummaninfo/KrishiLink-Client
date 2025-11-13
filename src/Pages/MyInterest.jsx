@@ -4,7 +4,7 @@ import axios from "axios";
 import { Atom } from "react-loading-indicators";
 import { Link } from "react-router";
 
-const API_BASE = "http://localhost:9000";
+const API_BASE = "https://krishilink-server-one.vercel.app";
 
 const MyInterest = () => {
   const { user, loading } = useContext(AuthContext);
@@ -77,7 +77,9 @@ const MyInterest = () => {
   const displayed = mydata.filter((item) => {
     if (!filterStatus || filterStatus === "all") return true;
     // normalize undefined -> pending
+    
     const st = (item.status || "pending").toString().toLowerCase();
+    console.log(displayed)
     return st === filterStatus.toLowerCase();
   });
 
@@ -136,7 +138,7 @@ const MyInterest = () => {
                       {/* NEW: clickable crop name → details page */}
                       <div className="font-medium text-slate-900">
                         <Link
-                          to={`/crops/${item.cropId}`}
+                          to={`/crops-details/${item.cropId}`}
                           className="hover:underline text-emerald-600"
                         >
                           {item.cropName || item.cropId || "—"}

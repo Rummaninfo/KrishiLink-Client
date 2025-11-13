@@ -1,16 +1,17 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { use, useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
 import { Atom } from "react-loading-indicators";
 import Swal from "sweetalert2";
 
-const API_BASE = "http://localhost:9000";
+const API_BASE = "https://krishilink-server-one.vercel.app";
 
 const MyPost = () => {
   const { user, loading } = useContext(AuthContext);
   const [rows, setRows] = useState([]);
   const [selected, setSelected] = useState(null);
   const cropRef = useRef();
+
 
   // Load my posts
   useEffect(() => {
@@ -53,7 +54,9 @@ const MyPost = () => {
       .put(`${API_BASE}/myposts/${selected._id}`, updateinfo)
       .then(() => {
         setRows((prev) =>
-          prev.map((r) => (r._id === selected._id ? { ...r, ...updateinfo } : r))
+          prev.map((r) =>
+            r._id === selected._id ? { ...r, ...updateinfo } : r
+          )
         );
 
         Swal.fire({
@@ -104,6 +107,8 @@ const MyPost = () => {
     }
   };
 
+ 
+
   return (
     <div className="container mx-auto max-w-5xl p-4">
       <h1 className="text-3xl font-bold text-green-700 mb-6">My Posts</h1>
@@ -145,17 +150,25 @@ const MyPost = () => {
 
                 <td className="py-3">
                   <div className="flex justify-end gap-2">
-                    <button onClick={() => editbtn(item)} className="btn btn-xs">
+                    <button
+                      onClick={() => editbtn(item)}
+                      className="btn btn-xs"
+                    >
                       Edit
                     </button>
 
                     {/* Edit Modal */}
-                    <dialog ref={cropRef} className="modal modal-bottom sm:modal-middle">
+                    <dialog
+                      ref={cropRef}
+                      className="modal modal-bottom sm:modal-middle"
+                    >
                       <div className="modal-box">
                         <form onSubmit={updatedcrop} className="space-y-4">
                           <div className="form-control">
                             <label className="label">
-                              <span className="label-text font-medium">Crop Name</span>
+                              <span className="label-text font-medium">
+                                Crop Name
+                              </span>
                             </label>
                             <input
                               defaultValue={selected?.name}
@@ -168,7 +181,9 @@ const MyPost = () => {
 
                           <div className="form-control">
                             <label className="label">
-                              <span className="label-text font-medium">Price (৳)</span>
+                              <span className="label-text font-medium">
+                                Price (৳)
+                              </span>
                             </label>
                             <input
                               defaultValue={selected?.pricePerUnit}
@@ -182,7 +197,9 @@ const MyPost = () => {
 
                           <div className="form-control">
                             <label className="label">
-                              <span className="label-text font-medium">Quantity</span>
+                              <span className="label-text font-medium">
+                                Quantity
+                              </span>
                             </label>
                             <input
                               defaultValue={selected?.quantity}

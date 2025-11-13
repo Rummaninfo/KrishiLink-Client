@@ -37,7 +37,7 @@ const AddCrops = () => {
       owner,
     };
     console.log(info);
-    axios.post("http://localhost:9000/allcrops", info)
+    axios.post("https://krishilink-server-one.vercel.app/allcrops", info)
     .then(() => {
         // Success toast (auto-close) then navigate to /myposts
         Swal.fire({

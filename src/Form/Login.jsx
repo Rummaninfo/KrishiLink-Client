@@ -4,6 +4,7 @@ import { toast, ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "../Context/AuthContext";
 import { useLocation, useNavigate } from "react-router";
+import Swal from "sweetalert2"; // <- SweetAlert2 import
 
 const Login = () => {
   const { setUser, loginuser } = useContext(AuthContext);
@@ -11,7 +12,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const from = location.state?.from?.pathname || "/";
-  console.log(from)
+  console.log(from);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -40,15 +41,20 @@ const Login = () => {
         setUser(result.user);
       }
 
-      toast.success("Successful login", {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        pauseOnHover: true,
-        draggable: true,
-        transition: Bounce,
-        onClose: () => navigate(from, { replace: true }), 
+      // Show SweetAlert success popup, then navigate when it's closed/auto-closed
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful!",
+        text: "Welcome back to KrishiLink",
+        timer: 1500,
+        showConfirmButton: false,
+        background: "#ffffff",
+      }).then(() => {
+        navigate(from, { replace: true });
       });
+
+      // keep toast too (optional) — comment out if you don't want both
+     
     } catch (err) {
       console.error("Login error:", err);
       const message = err?.message || "Login failed";
