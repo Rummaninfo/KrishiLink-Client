@@ -60,16 +60,18 @@ export const router = createBrowserRouter([
         element: <Privatepage>
           <CropsDetails></CropsDetails>
 
-          
+
         </Privatepage>, 
         loader: ({params})=> fetch(`http://localhost:9000/allcrops/${params.id}`)
        },
-      //  {
-      //   path: "*", 
-      //   element: <NotFound></NotFound>
-      //  },
+       
        
 
     ]
+    
   },
+  {
+        path: "*", 
+        element: <NotFound></NotFound>
+       }
 ]);
