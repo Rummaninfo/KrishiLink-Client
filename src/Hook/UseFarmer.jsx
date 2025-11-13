@@ -8,7 +8,7 @@ const UseFarmer = () => {
 
   useEffect(()=>{
       setLoading(true)
-      axios.get("https://krishilink-server-one.vercel.app/allcrops")
+      axios.get("http://localhost:9000/allcrops")
       .then(data=> setCrops(data.data))
       .catch(error => setError(error))
       .finally(()=> setLoading(false))

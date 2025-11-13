@@ -295,11 +295,18 @@ const Home = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {data.slice(0, 6).map((prev) => (
-            <article
+            <motion.article
               key={prev?._id}
-              className="group relative w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              whileHover={{ scale: 1.02, y: -6 }}
+              className="group relative w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300"
               aria-labelledby={`crop-${prev?._id}`}
             >
+              {/* Animated Border */}
+              <span className="absolute left-0 top-0 h-[2px] w-0 bg-emerald-500 group-hover:w-full transition-all duration-300 ease-linear" />
+              <span className="absolute right-0 top-0 w-[2px] h-0 bg-emerald-500 group-hover:h-full transition-all duration-300 ease-linear delay-150" />
+              <span className="absolute right-0 bottom-0 h-[2px] w-0 bg-emerald-500 group-hover:w-full transition-all duration-300 ease-linear delay-300" />
+              <span className="absolute left-0 bottom-0 w-[2px] h-0 bg-emerald-500 group-hover:h-full transition-all duration-300 ease-linear delay-[450ms]" />
+
               <div className="relative">
                 <img src={prev?.image} alt={`${prev?.name} from ${prev?.location}`} className="h-56 w-full object-cover" loading="lazy" />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-80" />
@@ -346,7 +353,7 @@ const Home = () => {
                   </Link>
                 </div>
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
       </div>

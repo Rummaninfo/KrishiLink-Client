@@ -4,7 +4,8 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useLoaderData, useNavigate, useParams } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
 
-const API_BASE = "https://krishilink-server-one.vercel.app";
+// const API_BASE = "http://localhost:9000";
+const API_BASE = "http://localhost:9000";
 
 const CropsDetails = () => {
   const crop = useLoaderData();
@@ -102,13 +103,13 @@ const CropsDetails = () => {
       setError("Quantity must be at least 1.");
       return;
     }
-    
+
     // Check if requested quantity is available
     if (Number(quantity) > localQuantity) {
       setError(`Only ${localQuantity} ${crop.unit} available.`);
       return;
     }
-    
+
     setError("");
     setPostError("");
     if (modalRef.current && typeof modalRef.current.showModal === "function") {
@@ -135,7 +136,7 @@ const CropsDetails = () => {
       if (modalRef.current) modalRef.current.close();
       setQuantity(1);
       setMessage("");
-      
+
       if (postRes.data?.message) {
         alert(postRes.data.message);
       } else {
@@ -159,6 +160,8 @@ const CropsDetails = () => {
     }
   };
 
+
+
   // ✅ FIXED: Owner actions: accept/reject using PUT method only
   const handleUpdateRequestStatus = async (requestId, newStatus) => {
     if (!requestId) return;
@@ -171,11 +174,11 @@ const CropsDetails = () => {
     const prevRequests = [...requests];
 
     try {
-      // ✅ USE PUT METHOD INSTEAD OF PATCH
+      //  USE PUT METHOD INSTEAD OF PATCH
       const res = await axios.put(`${API_BASE}/myinterest`, {
         interestId: requestId,
-        cropsId: crop._id, // ✅ ADD cropsId which is required by server
-        status: newStatus
+        cropsId: crop._id,
+        status: newStatus,
       });
 
       const updatedInterest = res.data?.interest;
@@ -193,6 +196,9 @@ const CropsDetails = () => {
             : r
         )
       );
+
+
+      
 
       // Update local quantity
       if (updatedCrop && String(updatedCrop._id) === String(crop._id)) {
@@ -212,10 +218,9 @@ const CropsDetails = () => {
       } else {
         alert(`Request ${newStatus} successfully!`);
       }
-
     } catch (err) {
       console.error("Failed to update request status:", err);
-      
+
       // Better error handling
       if (err.response?.status === 400) {
         alert(

@@ -4,7 +4,7 @@ import axios from "axios";
 import { Atom } from "react-loading-indicators";
 import Swal from "sweetalert2";
 
-const API_BASE = "https://krishilink-server-one.vercel.app";
+const API_BASE = "http://localhost:9000";
 
 const MyPost = () => {
   const { user, loading } = useContext(AuthContext);

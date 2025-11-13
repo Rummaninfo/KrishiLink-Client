@@ -3,7 +3,7 @@ import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
 import { Atom } from "react-loading-indicators";
 
-const API_BASE = "https://krishilink-server-one.vercel.app";
+const API_BASE = "http://localhost:9000";
 
 const MyInterest = () => {
   const { user, loading } = useContext(AuthContext);
