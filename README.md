@@ -79,7 +79,7 @@ Client → Firebase
 Server → Vercel
 
 
-Dependencies
+```Dependencies
 {
   "@tailwindcss/vite": "^4.1.17",
   "axios": "^1.13.2",
