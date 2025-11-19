@@ -86,7 +86,7 @@ const AllCrops = () => {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 pt-10 pb-10 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 px-3 pt-10 pb-10 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredCrops.map((prev) => (
             <AllCrospCard key={prev._id} prev={prev} />
           ))}

@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 const AllCrospCard = ({ prev }) => {
   return (
     <article
-      className="group relative w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+      className="group relative w-full  overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
       aria-labelledby={`crop-${prev?._id}`}
     >
       {/* Top media */}
