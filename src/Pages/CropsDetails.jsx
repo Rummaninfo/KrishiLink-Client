@@ -5,7 +5,7 @@ import { useLoaderData, useNavigate, useParams } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
 import Swal from "sweetalert2";
 
-const API_BASE = "https://krishilink-server-one.vercel.app";
+const API_BASE = "http://localhost:9000";
 
 const CropsDetails = () => {
   const crop = useLoaderData();

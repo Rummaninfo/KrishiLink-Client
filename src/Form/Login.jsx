@@ -74,7 +74,7 @@ const Login = () => {
       <div className="w-full max-w-md bg-white/80 backdrop-blur border rounded-2xl shadow-sm p-6">
         <div className="text-center mb-6">
           <div className="inline-flex w-9 h-9 bg-green-600 rounded-full mr-2" />
-          <h1 className="inline-block text-2xl font-extrabold align-middle">
+          <h1 className="inline-block text-2xl text-black font-extrabold align-middle">
             KrishiLink
           </h1>
           <p className="text-gray-600 text-sm mt-1">
@@ -88,8 +88,9 @@ const Login = () => {
             <input
               name="email"
               type="email"
+              
               placeholder="you@email.com"
-              className="mt-1 w-full border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
+              className="mt-1 w-full border border-black text-black rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
               required
             />
           </div>
@@ -100,7 +101,7 @@ const Login = () => {
               name="password"
               type="password"
               placeholder="Password"
-              className="mt-1 w-full border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
+              className="mt-1 w-full border border-black text-black  rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
               required
             />
             {/* Forgot password link (UI only) */}

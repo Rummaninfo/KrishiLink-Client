@@ -2,13 +2,22 @@ import React, { useContext, useState, useRef, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { AuthContext } from "../Context/AuthContext";
+import { useTheme } from "next-themes";
+import { MdDarkMode, MdLightMode } from "react-icons/md"
+
 
 const activeClasses =
   "font-semibold text-emerald-700 bg-emerald-200 px-3 py-1 rounded-md shadow-sm";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { theme, setTheme, systemTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+
   const { user, userSignOut } = useContext(AuthContext);
+
+ 
 
   const handleSignOut = async () => {
     try {
@@ -65,9 +74,20 @@ const Navbar = () => {
     transition: { duration: 0.12, ease: "easeOut" },
   };
 
+useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  const currentTheme = theme === "system" ? systemTheme : theme;
+
+
+  // console.log(currentTheme)
+
   return (
-    <div className="backdrop-blur-xl bg-emerald-600/95 sticky top-0 z-50 shadow-md">
-      <div className="container mx-auto navbar px-3 sm:px-4">
+    <div className="backdrop-blur-xl bg-emerald-600/95  dark:bg-gray-900  z-50 shadow-md">
+      <div className="container mx-auto navbar px-3  sm:px-4">
         {/* LEFT */}
         <div className="navbar-start flex items-center gap-3">
           {/* Mobile menu button */}
@@ -98,7 +118,7 @@ const Navbar = () => {
                   transition={anim.transition}
                   className="
                     menu menu-sm
-                    mt-2 p-3 shadow bg-white rounded-b-lg
+                    mt-2 p-3 shadow bg-gray-900 rounded-b-lg
                     fixed left-0 right-0
                     top-[56px]  /* adjust if your navbar height differs */
                     z-50
@@ -176,6 +196,19 @@ const Navbar = () => {
                           My Interests
                         </NavLink>
                       </li>
+                      <li>
+                        <NavLink
+                          to="dashboard"
+                          
+                          className={({ isActive }) =>
+                            isActive ? activeClasses : "block py-2 px-2 rounded"
+                          }
+                        >
+                          Dashboard
+                        </NavLink>
+                      </li>
+
+                    
 
                       <li className="mt-2">
                         <button
@@ -192,7 +225,11 @@ const Navbar = () => {
                   ) : (
                     <>
                       <li>
-                        <Link to="/login" onClick={closeMenu} className={mainBtn}>
+                        <Link
+                          to="/login"
+                          onClick={closeMenu}
+                          className={mainBtn}
+                        >
                           Login
                         </Link>
                       </li>
@@ -259,7 +296,7 @@ const Navbar = () => {
                     Profile
                   </NavLink>
                 </li>
-                <li>
+                {/* <li>
                   <NavLink
                     to="/addcrops"
                     className={({ isActive }) =>
@@ -268,8 +305,8 @@ const Navbar = () => {
                   >
                     Add Crops
                   </NavLink>
-                </li>
-                <li>
+                </li> */}
+                {/* <li>
                   <NavLink
                     to="/myposts"
                     className={({ isActive }) =>
@@ -278,8 +315,8 @@ const Navbar = () => {
                   >
                     My Posts
                   </NavLink>
-                </li>
-                <li>
+                </li> */}
+                {/* <li>
                   <NavLink
                     to="/myinterests"
                     className={({ isActive }) =>
@@ -287,6 +324,16 @@ const Navbar = () => {
                     }
                   >
                     My Interests
+                  </NavLink>
+                </li> */}
+                <li>
+                  <NavLink
+                    to="/dashboard"
+                    className={({ isActive }) =>
+                      isActive ? activeClasses : ""
+                    }
+                  >
+                    Dashboard
                   </NavLink>
                 </li>
               </>
@@ -323,6 +370,19 @@ const Navbar = () => {
               <button onClick={handleSignOut} className={mainBtn}>
                 Log Out
               </button>
+              {/* <input  type="checkbox" defaultChecked className="toggle" /> */}
+                <button
+  className="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 
+             dark:bg-red-700 dark:hover:bg-red-600 transition-colors"
+  onClick={() => setTheme(currentTheme === "light" ? "dark" : "light")}
+>
+  {currentTheme === "light" ? (
+    <MdDarkMode size={22} />
+  ) : (
+    <MdLightMode size={22} />
+  )}
+</button>
+
             </>
           )}
         </div>

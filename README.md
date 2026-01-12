@@ -5,7 +5,7 @@ Built with React, Tailwind CSS, Firebase, React Router, SweetAlert2, Toastify & 
 
 🚀 Live Demo
 
-🔗 https://krishilink-a30bb.web.app/
+🔗 http://localhost:9000/
 
 🖼️ Screenshot
 

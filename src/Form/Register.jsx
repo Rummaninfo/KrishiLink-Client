@@ -115,7 +115,7 @@ const Register = () => {
               name="name"
               required
               placeholder="Enter your name"
-              className="mt-1 w-full border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
+              className="mt-1 w-full border-black text-black border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
             />
           </div>
 
@@ -128,7 +128,7 @@ const Register = () => {
               type="email"
               required
               placeholder="you@email.com"
-              className="mt-1 w-full border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
+              className="mt-1 border-black text-black w-full border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
             />
           </div>
 
@@ -138,7 +138,7 @@ const Register = () => {
               name="photo"
               type="text"
               placeholder="https://..."
-              className="mt-1 w-full border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
+              className="mt-1 w-full border border-black text-black rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
             />
           </div>
 
@@ -149,7 +149,7 @@ const Register = () => {
               name="password"
               required
               placeholder="Password"
-              className="mt-1 w-full border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
+              className="mt-1 w-full border border-black text-black rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
             />
           </div>
 
@@ -181,7 +181,7 @@ const Register = () => {
           onClick={googleSignUser}
           type="button"
           disabled={loading}
-          className="w-full border rounded-xl py-2 hover:bg-gray-50 flex items-center justify-center gap-2 transition"
+          className="w-full border-black text-black border rounded-xl py-2 hover:bg-gray-50 flex items-center justify-center gap-2 transition"
         >
           <img
             src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"

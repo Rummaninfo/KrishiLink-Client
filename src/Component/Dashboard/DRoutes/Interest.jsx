@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../Context/AuthContext";
+
 import axios from "axios";
 import { Atom } from "react-loading-indicators";
 import { Link } from "react-router";
+import { AuthContext } from "../../../Context/AuthContext";
 
 const API_BASE = "http://localhost:9000";
 
-const MyInterest = () => {
+const Interest = () => {
   const { user, loading } = useContext(AuthContext);
   const [mydata, setMydata] = useState([]);
   const [cropsMap, setCropsMap] = useState({});
@@ -22,7 +23,9 @@ const MyInterest = () => {
     setLoadingData(true);
 
     // Parallel fetch: interests + all crops
-    const p1 = axios.get(`${API_BASE}/myinterest`, { params: { email: user.email } });
+    const p1 = axios.get(`${API_BASE}/myinterest`, {
+      params: { email: user.email },
+    });
     const p2 = axios.get(`${API_BASE}/allcrops`);
 
     Promise.all([p1, p2])
@@ -45,7 +48,10 @@ const MyInterest = () => {
           return {
             ...it,
             cropName: it.cropName || (crop ? crop.name : ""),
-            ownerName: it.ownerName || (crop ? crop.owner?.ownerName : "") || it.ownerEmail,
+            ownerName:
+              it.ownerName ||
+              (crop ? crop.owner?.ownerName : "") ||
+              it.ownerEmail,
             unit: it.unit || (crop ? crop.unit : ""),
           };
         });
@@ -65,7 +71,7 @@ const MyInterest = () => {
     };
   }, [user?.email]);
 
-  if (loading || loadingData ) {
+  if (loading || loadingData) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <Atom color="#32cd32" size="medium" text="" textColor="" />
@@ -77,25 +83,32 @@ const MyInterest = () => {
   const displayed = mydata.filter((item) => {
     if (!filterStatus || filterStatus === "all") return true;
     // normalize undefined -> pending
-    
+
     const st = (item.status || "pending").toString().toLowerCase();
-  
+
     return st === filterStatus.toLowerCase();
   });
 
   return (
     <div className="mx-auto p-6">
       <div className="flex items-center justify-between mb-6 gap-4">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-200">
-          My Interests <span className="text-emerald-600 dark:text-slate-200">({mydata?.length})</span>
+        <h1 className="text-2xl font-bold text-white">
+          My Interests{" "}
+          <span className="text-emerald-600 dark:text-slate-200">
+            ({mydata?.length})
+          </span>
         </h1>
 
         <div className="flex items-center gap-3">
-          {loadingData && <div className="text-sm text-slate-500">Refreshing…</div>}
+          {loadingData && (
+            <div className="text-sm text-slate-500">Refreshing…</div>
+          )}
 
           {/* Sorting / Filter by status */}
           <label className="flex items-center gap-2 text-sm">
-            <span className="text-slate-600 font-semibold dark:text-slate-200">Filter:</span>
+            <span className="text-slate-600 font-semibold dark:text-slate-200">
+              Filter:
+            </span>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
@@ -113,11 +126,13 @@ const MyInterest = () => {
       <div className="rounded-2xl border shadow-sm bg-white  overflow-hidden">
         <div className="h-1.5 w-full bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-500" />
         <div className="p-4 border-b">
-          <h2 className="text-lg font-semibold text-slate-900">Interest List</h2>
+          <h2 className="text-lg font-semibold text-white">Interest List</h2>
         </div>
 
         {displayed.length === 0 ? (
-          <div className="text-center py-20 text-slate-500">No interests found</div>
+          <div className="text-center py-20 text-slate-500">
+            No interests found
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -133,7 +148,10 @@ const MyInterest = () => {
 
               <tbody className="[&>tr:nth-child(odd)]:bg-white [&>tr:nth-child(even)]:bg-slate-50/50">
                 {displayed?.map((item) => (
-                  <tr key={item._id} className="hover:bg-emerald-50/40 transition-colors">
+                  <tr
+                    key={item._id}
+                    className="hover:bg-emerald-50/40 transition-colors"
+                  >
                     <td className="py-3 px-4">
                       {/* NEW: clickable crop name → details page */}
                       <div className="font-medium text-slate-900">
@@ -145,21 +163,31 @@ const MyInterest = () => {
                         </Link>
                       </div>
                       <div className="text-xs text-slate-500">
-                        {item.createdAt ? new Date(item.createdAt).toLocaleString() : ""}
+                        {item.createdAt
+                          ? new Date(item.createdAt).toLocaleString()
+                          : ""}
                       </div>
                     </td>
 
                     <td className="py-3 px-4">
-                      <div className="text-sm font-medium text-slate-800">{item.ownerName || item.ownerEmail || "—"}</div>
+                      <div className="text-sm font-medium text-slate-800">
+                        {item.ownerName || item.ownerEmail || "—"}
+                      </div>
                     </td>
 
                     <td className="py-3 px-4 whitespace-nowrap">
-                      <span className="font-semibold text-slate-900">{item.quantity}</span>
-                      {item.unit ? <span className="text-slate-500"> {item.unit}</span> : null}
+                      <span className="font-semibold text-slate-900">
+                        {item.quantity}
+                      </span>
+                      {item.unit ? (
+                        <span className="text-slate-500"> {item.unit}</span>
+                      ) : null}
                     </td>
 
                     <td className="py-3 px-4 max-w-[450px]">
-                      <p className="text-slate-700 line-clamp-2">{item.message || "—"}</p>
+                      <p className="text-slate-700 line-clamp-2">
+                        {item.message || "—"}
+                      </p>
                     </td>
 
                     <td className="py-3 px-4 whitespace-nowrap">
@@ -199,4 +227,4 @@ const MyInterest = () => {
   );
 };
 
-export default MyInterest;
+export default Interest;

@@ -19,14 +19,17 @@ const MainLayout = () => {
   }, [location.pathname]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <header>
-        <div className="">
+    <div className="flex  relative flex-col min-h-screen ">
+      {/* <header>
+        <div className="sticky top-0">
           <Navbar></Navbar>
         </div>
-      </header>
+      </header> */}
+       <div className="sticky z-50 top-0 0">
+          <Navbar></Navbar>
+        </div>
 
-      <main className=" bg-[#e1fade] flex-1 ">
+      <main className=" bg-[#e1fade] flex-1  dark:bg-[#1f1f1f]">
         {
             loading? (
                 <div className="flex justify-center items-center min-h-screen">

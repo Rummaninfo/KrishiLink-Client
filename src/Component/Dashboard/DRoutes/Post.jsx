@@ -1,8 +1,9 @@
 import React, { use, useContext, useEffect, useRef, useState } from "react";
-import { AuthContext } from "../Context/AuthContext";
+
 import axios from "axios";
 import { Atom } from "react-loading-indicators";
 import Swal from "sweetalert2";
+import { AuthContext } from "../../../Context/AuthContext";
 
 const API_BASE = "http://localhost:9000";
 
@@ -135,20 +136,20 @@ const MyPost = () => {
 
             {rows.map((item) => (
               <tr key={item._id} className="hover border-b">
-                <td className="py-3 font-medium">{item.name}</td>
+                <td className="py-3 font-medium text-black">{item.name}</td>
 
-                <td className="py-3">
+                <td className="py-3 text-black">
                   ৳ {item.pricePerUnit}
                   <span className="text-slate-400"> / {item.unit}</span>
                 </td>
 
-                <td className="py-3">
+                <td className="py-3 text-black">
                   <span className="inline-block bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full text-xs font-semibold">
                     {item.quantity}
                   </span>
                 </td>
 
-                <td className="py-3">
+                <td className="py-3 text-black">
                   <div className="flex justify-end gap-2">
                     <button
                       onClick={() => editbtn(item)}
