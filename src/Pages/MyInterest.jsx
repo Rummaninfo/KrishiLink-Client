@@ -4,7 +4,7 @@ import axios from "axios";
 import { Atom } from "react-loading-indicators";
 import { Link } from "react-router";
 
-const API_BASE = "http://localhost:9000";
+const API_BASE = "https://krishilink-server-one.vercel.app";
 
 const MyInterest = () => {
   const { user, loading } = useContext(AuthContext);

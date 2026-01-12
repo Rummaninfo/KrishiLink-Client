@@ -5,7 +5,7 @@ Built with React, Tailwind CSS, Firebase, React Router, SweetAlert2, Toastify & 
 
 🚀 Live Demo
 
-🔗 http://localhost:9000/
+🔗 https://krishilink-server-one.vercel.app/
 
 🖼️ Screenshot
 

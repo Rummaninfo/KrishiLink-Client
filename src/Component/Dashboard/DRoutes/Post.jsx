@@ -5,7 +5,7 @@ import { Atom } from "react-loading-indicators";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../../Context/AuthContext";
 
-const API_BASE = "http://localhost:9000";
+const API_BASE = "https://krishilink-server-one.vercel.app";
 
 const MyPost = () => {
   const { user, loading } = useContext(AuthContext);

@@ -28,7 +28,7 @@ export const router = createBrowserRouter([
         index: true,
        
         element: <Home></Home>, 
-        loader: ()=> fetch("http://localhost:9000/allcrops")
+        loader: ()=> fetch("https://krishilink-server-one.vercel.app/allcrops")
        }, 
        {
         path: "/all-crops", 
@@ -73,7 +73,7 @@ export const router = createBrowserRouter([
 
 
         </Privatepage>, 
-        loader: ({params})=> fetch(`http://localhost:9000/allcrops/${params.id}`)
+        loader: ({params})=> fetch(`https://krishilink-server-one.vercel.app/allcrops/${params.id}`)
        },
        
        
