@@ -15,6 +15,7 @@ import Dashboard from "../Component/Dashboard/Dashboard";
 import NewAdd from "../Component/Dashboard/DRoutes/NewAdd";
 import Post from "../Component/Dashboard/DRoutes/Post";
 import Interest from "../Component/Dashboard/DRoutes/Interest";
+import Farmingtips from "../Pages/Farmingtips";
 
 
 
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
        {
         path: "/login", 
         element: <Login></Login>
+       }, 
+       {
+        path: "/farmingtips", 
+        element: <Farmingtips></Farmingtips>
        }, 
        {
         path: "/register", 

@@ -149,6 +149,17 @@ useEffect(() => {
                       All Crops
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink
+                      to="/farmingtips"
+                      onClick={closeMenu}
+                      className={({ isActive }) =>
+                        isActive ? activeClasses : "block py-2 px-2 rounded"
+                      }
+                    >
+                      Farming Tips
+                    </NavLink>
+                  </li>
 
                   {user ? (
                     <>
@@ -281,6 +292,14 @@ useEffect(() => {
                 className={({ isActive }) => (isActive ? activeClasses : "")}
               >
                 All Crops
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/farmingtips"
+                className={({ isActive }) => (isActive ? activeClasses : "")}
+              >
+               Farming Tips
               </NavLink>
             </li>
 
